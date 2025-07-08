@@ -7,9 +7,10 @@ export default class DoctorsController {
     doc =new doctorDb()
     async getDoctor({request,response}:HttpContext){
         try
-            {const { id } =await  docterGetIdValidator.validate(request.qs())
+            {
+            const { id } =await  docterGetIdValidator.validate(request.qs())
             const res = await this.doc.get(id);
-            response.send(res)}
+            response.ok({success:true,message:'Fetched successfully',data:res})}
         catch(err){
             throw err
         }
@@ -33,7 +34,7 @@ export default class DoctorsController {
                 })
             }
             await this.doc.addManyDoctors(doctorArray)
-            response.send('Created Successfully')
+            response.status(201).send({success:true,message:'Created Successfully'})
         }
         catch(err){
             throw err
@@ -45,7 +46,7 @@ export default class DoctorsController {
             const payload= await doctorPutValidator.validate(request.body());
             const {name,expertise} = payload;
             await this.doc.updateDoctor(name,expertise,id);
-            response.send('Updated Successfully')
+            response.status(204).send({success:true,message:'Updated Successfully'})
         }catch(err){
             throw err
         }
@@ -56,7 +57,7 @@ export default class DoctorsController {
             const { id } =await  docterIdValidator.validate(request.qs());
             const payload = doctorPatchValidator.validate(request.body)
             await this.doc.patchDoctor(payload,id);
-            response.send(payload)
+            response.status(204).send({success:true,message:'Updated Successfully'})
         }
         catch(err){
             throw err
@@ -68,7 +69,7 @@ export default class DoctorsController {
         {
             const { id } =await  docterIdValidator.validate(request.qs());
             await this.doc.deleteDoctor(id);
-            response.send('Deletion success');
+            response.status(204).send({success:true,message:'Deletion success'});
         }
         catch(err)
         {
@@ -79,22 +80,19 @@ export default class DoctorsController {
         
         const ids= await doctorIdsValidator.validate(request.qs());
         await this.doc.deleteMany(ids.ids);
-        return response.ok({ message: 'Doctors deleted successfully', deletedIds: ids })
+        return response.ok({success:true, message: 'Doctors deleted successfully', deletedIds: ids })
         }
-    updateMany(){}
 
-    
     async getPatientCount({ request, response }: HttpContext) {
       
         const {id} = await docterGetIdValidator.validate(request.qs());
         const payload = await this.doc.getPatientCnt(id);
-        response.ok(payload);
+        response.status(200).send({success:true,message:'fetch success',data:payload});
     }
     async getPatientDetailsWithDoctor({request,response}:HttpContext){
         const{id}=await docterGetIdValidator.validate(request.qs());
         const payload = await this.doc.getDoctorWithPatients(id);
-        response.ok(payload)
+        response.status(200).send({success:true,message:'fetch success',data:payload});
     }
-      
-
+    updateMany(){}
 }

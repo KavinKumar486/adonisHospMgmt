@@ -42,18 +42,10 @@ router.group(()=>{
 ).prefix('/patient')
 
 router.group(()=>{
-  router.get('/listAll',[medicineController,'listAll'])
-  router.get('/list/:id',[medicineController,'listById']).where(
-    'id',{
-      match: /^[0-9]+$/,
-      cast:(value)=>Number(value)
-    }
-  )
-  router.post('/add',[medicineController,'add'])
-  router.post('/addMany',[medicineController,'addMany'])
-  router.put('/updateAll/:id',[medicineController,'updateAll'])
-  router.patch('/update/:id',[medicineController,'update'])
-  router.delete('/delete/:id',[medicineController,'delete'])
-  router.delete('deleteMany/:id',[medicineController,'deleteMany'])
+  router.get('getMedicine',[medicineController,'getMedicine']),
+  router.post('add',[medicineController,'add']),
+  router.put('update',[medicineController,'update']),
+  router.patch('patch',[medicineController,'patchMedicine']),
+  router.delete('deleteMedicine',[medicineController,'delete'])
   }
 ).prefix('/medicine')

@@ -17,8 +17,7 @@ export const doctorInsertValidator = vine.compile(
     name: vine.string()
       .trim()
       .minLength(3)
-      .maxLength(60)
-      .transform((val) => val.toLowerCase()),
+      .maxLength(60),
 
     expertise: vine.string()
       .trim()
@@ -33,8 +32,7 @@ export const doctorPatchValidator = vine.compile(
       .trim()
       .minLength(2)
       .maxLength(30)
-      .optional()
-      .transform((val) => val.toLowerCase()),
+      .optional(),
 
     expertise: vine.string()
       .trim()
@@ -51,8 +49,7 @@ export const doctorPutValidator = vine.compile(
     name: vine.string()
       .trim()
       .minLength(2)
-      .maxLength(30)
-      .transform((val) => val.toLowerCase()),
+      .maxLength(30),
 
     expertise: vine.string()
       .trim()

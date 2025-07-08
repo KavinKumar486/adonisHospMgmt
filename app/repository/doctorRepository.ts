@@ -3,24 +3,23 @@ import Doctor from '#models/doctor'
 
 
 class docRepo{
-   
-    async get(id?:number){
-        try
-        {let payload;
-        if(!id){
-            payload = await Doctor.all();
-        }else{
-            payload = await Doctor.query().where('id',id);
-        }
-        if(payload.length > 0){
-            return payload;
-        }
-        throw new Error('No Users Found')
-        }
-        catch(err){
-            throw err
-        }
+   async get(id?: number) {
+  try {
+    const doctors = await Doctor.query()
+      .if(id !== undefined, (query) => {
+        query.where('id', id!)
+      })
+
+    if (!doctors.length) {
+      throw new Error('No Users Found')
     }
+    return id ? doctors[0] : doctors
+  } catch (err) {
+    throw err
+  }
+}
+
+      
     async addDoctor(name: string,expertise:string){
         try{ 
             if(!name || !expertise){
