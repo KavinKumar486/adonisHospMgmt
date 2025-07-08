@@ -23,9 +23,19 @@ router.group(()=>{
 router.group(()=>{
   router.get('/getPatient',[patientController,'getPatient'])
   router.post('/add',[patientController,'add'])
-  router.patch('/update/:id',[patientController,'update'])
+  router.patch('/update/:id',[patientController,'update']).where(
+    'id',{
+      match: /^[0-9]+$/,
+      cast:(value)=>Number(value)
+    }
+  ),
+  router.put('patch/:id',[patientController,'patchPatient']).where(
+    'id',{
+      match: /^[0-9]+$/,
+      cast:(value)=>Number(value)
+    }
+  ),
   router.delete('/delete/:id',[patientController,'delete'])
-  
   }
 ).prefix('/patient')
 

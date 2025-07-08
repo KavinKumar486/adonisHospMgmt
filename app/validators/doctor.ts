@@ -1,6 +1,15 @@
 import vine from '@vinejs/vine'
 
-
+export const docterGetIdValidator = vine.compile(
+    vine.object({
+        id:vine.number().optional()
+    })
+)
+export const docterIdValidator = vine.compile(
+    vine.object({
+        id:vine.number()
+    })
+)
 export const doctorInsertValidator = vine.compile(
     
     vine.object({

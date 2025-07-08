@@ -8,8 +8,9 @@ export default class extends BaseSchema {
       table.increments('id')
       table.integer('patientId').unsigned().notNullable().references('patients.id').onDelete('cascade')
       table.integer('medicineId').unsigned().notNullable().references('medicines.id').onDelete('cascade')
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.string('medicine_name');
+      table.timestamp('created_at');
+      table.timestamp('updated_at');
     })
   }
   async down() {
