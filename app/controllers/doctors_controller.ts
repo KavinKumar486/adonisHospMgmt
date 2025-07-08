@@ -1,6 +1,6 @@
 import { HttpContext } from '@adonisjs/core/http'
 import doctorDb from '../repository/doctorRepository.js'
-import { doctorInsertValidator, doctorPutValidator, doctorPatchValidator,docterGetIdValidator, docterIdValidator } from '#validators/doctor';
+import { doctorInsertValidator, doctorPutValidator, doctorPatchValidator,docterGetIdValidator, docterIdValidator, doctorIdsValidator } from '#validators/doctor';
 
 
 export default class DoctorsController {
@@ -17,7 +17,7 @@ export default class DoctorsController {
     async add({ request, response }: HttpContext) {
         try
         {
-                let doctorObject = request.body() as Array<{ name: string; expertise: string }>
+            let doctorObject = request.body() as Array<{ name: string; expertise: string }>
             if (!Array.isArray(doctorObject)) {
                 doctorObject = [doctorObject]
             }
@@ -72,10 +72,29 @@ export default class DoctorsController {
         }
         catch(err)
         {
-            throw err
+            response.internalServerError(err)
         }
     }
-    deleteMany(){}
+    async deleteMany({request,response}:HttpContext){
+        
+        const ids= await doctorIdsValidator.validate(request.qs());
+        await this.doc.deleteMany(ids.ids);
+        return response.ok({ message: 'Doctors deleted successfully', deletedIds: ids })
+        }
     updateMany(){}
+
+    
+    async getPatientCount({ request, response }: HttpContext) {
+      
+        const {id} = await docterGetIdValidator.validate(request.qs());
+        const payload = await this.doc.getPatientCnt(id);
+        response.ok(payload);
+    }
+    async getPatientDetailsWithDoctor({request,response}:HttpContext){
+        const{id}=await docterGetIdValidator.validate(request.qs());
+        const payload = await this.doc.getDoctorWithPatients(id);
+        response.ok(payload)
+    }
+      
 
 }

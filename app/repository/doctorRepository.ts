@@ -1,6 +1,7 @@
 // import { HttpContext } from "@adonisjs/core/http";
 import Doctor from '#models/doctor'
 
+
 class docRepo{
    
     async get(id?:number){
@@ -69,5 +70,50 @@ class docRepo{
             throw err
         }
     }
+    async deleteMany(ids:Array<number>){
+            try{await Doctor.query().whereIn('id', ids).delete()}
+            catch(err){throw err}
+    }
+    async getPatientCnt(id?:number){
+        try{
+        let doctors;
+        if (id) {
+             doctors = await Doctor.query()
+              .where('id', id)
+              .withCount('patients')
+              .first();
+      
+            if (!doctors) {
+                throw new Error('Doctor id not found');
+            }
+            doctors=[doctors]
+        }
+        else{ doctors = await Doctor.query().withCount('patients');}
+        const payload=doctors.map((doc) => ({
+            id: doc.id,
+            name: doc.name,
+            patientCount: doc.$extras.patients_count,
+          }))
+        return payload   
+        }
+        catch(err){
+            throw err
+        }
+    }
+    async getDoctorWithPatients(id?:number){
+        let docWithPatients;
+        if(id){
+             docWithPatients = await  Doctor.query()
+            .where('id',id)
+            .preload('patients')
+            if(!docWithPatients){
+                throw new Error('Doctor id not found');
+            };
+        }else{
+            docWithPatients= Doctor.query().preload('patients');  
+        }
+        return docWithPatients
+    }
+
 }
 export default docRepo

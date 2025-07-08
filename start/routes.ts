@@ -17,7 +17,9 @@ router.group(()=>{
   router.put('/updateAll/:id',[doctorController,'updateAll'])
   router.patch('/update/:id',[doctorController,'update'])
   router.delete('/delete/:id',[doctorController,'delete'])
-  router.delete('deleteMany/:id',[doctorController,'deleteMany'])
+  router.delete('deleteMany',[doctorController,'deleteMany'])
+  router.get('/getPatientCount',[doctorController,'getPatientCount']),
+  router.get('/getPatientDetailsWithDoctor',[doctorController,'getPatientDetailsWithDoctor'])
   }
 ).prefix('/doctor')
 router.group(()=>{
