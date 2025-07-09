@@ -6,7 +6,7 @@ class docRepo{
    async get(id?: number) {
   try {
     const doctors = await Doctor.query()
-      .if(id !== undefined, (query) => {
+      .if(id, (query) => {
         query.where('id', id!)
       })
 
