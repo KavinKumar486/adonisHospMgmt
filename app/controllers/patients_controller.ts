@@ -12,18 +12,31 @@ export default class PatientsController {
     catch(err){
       throw err
     }
-  }
+  } 
 
   async add({ request, response }: HttpContext) {
-    let patientObject = request.body()
-    const patientArrayInput = Array.isArray(patientObject) ? patientObject : [patientObject]
-    const patientArray = []
-    for (const obj of patientArrayInput) {
-      const payload = await patientValidator.validate(obj)
-      patientArray.push(payload)
+    try{let patientObject = request.body() as Array<{ patientName: string; diagnosis: string; doctorId: number}>
+    if (!Array.isArray(patientObject)) {
+      patientObject = [patientObject]
     }
-    await this.repo.addManyPatients(patientArray)
-    response.status(201).send({success:true,message:'Created Successfully'})
+    let patientArrayInput: Array<{ patientName: string; diagnosis: string; doctorId: number }> = []
+    for (let i = 0; i < patientObject.length; i++) {
+      await patientValidator.validate({
+        patientName: patientObject[i].patientName,
+        diagnosis: patientObject[i].diagnosis,
+        doctorId: patientObject[i].doctorId
+      })
+      patientArrayInput.push({
+        patientName: patientObject[i].patientName, 
+        diagnosis: patientObject[i].diagnosis,
+        doctorId: patientObject[i].doctorId
+      })
+    }
+    await this.repo.addManyPatients(patientArrayInput)
+    response.status(201).send({success:true,message:'Created Successfully'})}
+    catch(err){
+      throw err
+    }
   }
 
   async update({ request, response }: HttpContext) {
@@ -34,10 +47,14 @@ export default class PatientsController {
   }
 
   async delete({ request, response }: HttpContext) {
-    const id = request.params().id
+   try{ const id = request.params().id
     await this.repo.deletePatient(id)
     response.status(204).send({success:true,message:'Deleted Successfully'})
+ }catch(err){
+      throw err
+    }
   }
+  
   async patchPatient({request,response}:HttpContext){
     try {const id = request.params().id;
     const payload=  await patientPatchValidator.validate(request.body());

@@ -11,6 +11,8 @@ import router from '@adonisjs/core/services/router'
 import doctorController from '../app/controllers/doctors_controller.js'
 import patientController from '../app/controllers/patients_controller.js'
 import medicineController from '../app/controllers/medicines_controller.js'
+import loginController  from '../app/controllers/login_controller.js'
+import { verify } from 'crypto'
 router.group(()=>{
   router.get('/getDoctor',[doctorController,'getDoctor'])
   router.post('/add',[doctorController,'add'])
@@ -49,3 +51,4 @@ router.group(()=>{
   router.delete('deleteMedicine',[medicineController,'delete'])
   }
 ).prefix('/medicine')
+router.post('login',[loginController,'verify'])

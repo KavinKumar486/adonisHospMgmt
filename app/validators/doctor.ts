@@ -9,7 +9,7 @@ export const docterGetIdValidator = vine.compile(
 
 export const docterIdValidator = vine.compile(
   vine.object({
-    id: vine.number(),
+    id: vine.number()
   })
 )
 export const doctorInsertValidator = vine.compile(

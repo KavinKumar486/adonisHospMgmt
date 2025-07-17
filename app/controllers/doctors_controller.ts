@@ -52,30 +52,35 @@ export default class DoctorsController {
         }
     }
 
-    async update({request,response}:HttpContext){
-        try{
-            const { id } =await  docterIdValidator.validate(request.qs());
-            const payload = doctorPatchValidator.validate(request.body)
-            await this.doc.patchDoctor(payload,id);
-            response.status(204).send({success:true,message:'Updated Successfully'})
-        }
-        catch(err){
-            throw err
-        }
-    }
+async update({ request, response, params }: HttpContext) {
+  try {
+    const id = Number(params.id)
+    const payload = await doctorPatchValidator.validate(request.body())
+    await this.doc.patchDoctor(payload, id)
 
-    async delete({request,response}:HttpContext){
-        try
-        {
-            const { id } =await  docterIdValidator.validate(request.qs());
-            await this.doc.deleteDoctor(id);
-            response.status(204).send({success:true,message:'Deletion success'});
-        }
-        catch(err)
-        {
-            response.internalServerError(err)
-        }
-    }
+    response.status(200).send({
+      success: true,
+      message: 'Updated Successfully',
+    })
+  } catch (err) {
+    throw err
+  }
+}
+
+
+async delete({ params, response }: HttpContext) {
+  
+  const { id } = await docterIdValidator.validate(params)
+
+  try {
+    await this.doc.deleteDoctor(id)
+    return response.status(200).send({ success: true, message: 'Doctor deleted successfully' })
+  } catch (err) {
+    
+    return response.internalServerError({ success: false, message: 'Server error', error: err.message })
+  }
+}
+
     async deleteMany({request,response}:HttpContext){
         
         const ids= await doctorIdsValidator.validate(request.qs());
