@@ -12,7 +12,7 @@ import doctorController from '../app/controllers/doctors_controller.js'
 import patientController from '../app/controllers/patients_controller.js'
 import medicineController from '../app/controllers/medicines_controller.js'
 import loginController  from '../app/controllers/login_controller.js'
-import { verify } from 'crypto'
+import { middleware } from '#start/kernel'
 router.group(()=>{
   router.get('/getDoctor',[doctorController,'getDoctor'])
   router.post('/add',[doctorController,'add'])
@@ -23,7 +23,7 @@ router.group(()=>{
   router.get('/getPatientCount',[doctorController,'getPatientCount']),
   router.get('/getPatientDetailsWithDoctor',[doctorController,'getPatientDetailsWithDoctor'])
   }
-).prefix('/doctor')
+).prefix('/doctor').middleware(middleware.jwt)
 router.group(()=>{
   router.get('/getPatient',[patientController,'getPatient'])
   router.post('/add',[patientController,'add'])

@@ -18,22 +18,26 @@ export default class DoctorsController {
     async add({ request, response }: HttpContext) {
         try
         {
-            let doctorObject = request.body() as Array<{ name: string; expertise: string }>
-            if (!Array.isArray(doctorObject)) {
-                doctorObject = [doctorObject]
-            }
-            let doctorArray: Array<{ name: string; expertise: string }> = []
-            for (let i = 0; i < doctorObject.length; i++) {
-                await doctorInsertValidator.validate({
-                    name: doctorObject[i].name,
-                    expertise: doctorObject[i].expertise
-                })
-                doctorArray.push({
-                    name: doctorObject[i].name,
-                    expertise: doctorObject[i].expertise
-                })
-            }
-            await this.doc.addManyDoctors(doctorArray)
+            // let doctorObject = request.body() as Array<{ name: string; expertise: string, password: string }>
+            // if (!Array.isArray(doctorObject)) {
+            //     doctorObject = [doctorObject]
+            // }
+            // let doctorArray: Array<{ name: string; expertise: string, password: string }> = []
+            // for (let i = 0; i < doctorObject.length; i++) {
+            //     await doctorInsertValidator.validate({
+            //         name: doctorObject[i].name,
+            //         expertise: doctorObject[i].expertise,
+            //         password: doctorObject[i].password
+            //     })
+            //     doctorArray.push({
+            //         name: doctorObject[i].name,
+            //         expertise: doctorObject[i].expertise,
+            //         password: doctorObject[i].password
+            //     })
+            // }
+            console.log(request.header)
+            const{name,expertise,password} =  await doctorInsertValidator.validate(request.body())
+            await this.doc.addDoctor(name,expertise,password)
             response.status(201).send({success:true,message:'Created Successfully'})
         }
         catch(err){

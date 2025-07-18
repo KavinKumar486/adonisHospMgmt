@@ -24,7 +24,10 @@ export const doctorInsertValidator = vine.compile(
       .minLength(3)
       .maxLength(100)
       .transform((val) => val.toLowerCase()),
-  })
+      password: vine.string(),
+  }
+),
+  
 )
 export const doctorPatchValidator = vine.compile(
   vine.object({

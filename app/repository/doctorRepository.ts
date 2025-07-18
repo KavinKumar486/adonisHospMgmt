@@ -1,6 +1,6 @@
 // import { HttpContext } from "@adonisjs/core/http";
 import Doctor from '#models/doctor'
-
+import hash from '@adonisjs/core/services/hash'
 
 class docRepo{
    async get(id?: number) {
@@ -18,18 +18,17 @@ class docRepo{
     throw err
   }
 }
-
-      
-    async addDoctor(name: string,expertise:string){
+    async addDoctor(name: string,expertise:string, password: string){
         try{ 
-            if(!name || !expertise){
+            if(!name || !expertise || !password){
                 throw new Error('Pass all the required parameters')
             }
-            console.log(name,expertise)
+            
             const payload = await Doctor.create(
                 {
                 name:name,
-                expertise:expertise
+                expertise:expertise,
+                password:password
                 }  
             )
             return payload
@@ -47,14 +46,19 @@ class docRepo{
             throw err
         }
     }
-    async addManyDoctors(doctorArray: Array<object>){
-        try{
-            const payload = await Doctor.createMany(doctorArray);
-            return payload
-        }catch(err){
-            throw err
+    async addManyDoctors(doctorArray: Array<{ name: string; expertise: string; password: string }>) {
+    try {
+        console.log("before hasing : ", doctorArray[-1].password)
+        for (const doc of doctorArray) {
+            doc.password = await hash.make(doc.password)
         }
+        console.log("after hasing : ", doctorArray[-1].password)
+        const payload = await Doctor.createMany(doctorArray)
+        return payload
+    } catch (err) {
+        throw err
     }
+}
     async deleteDoctor(id: number){
         try{await Doctor.query().where('id',id).delete()
             return "Deletion Success"
