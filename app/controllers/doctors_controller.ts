@@ -6,12 +6,15 @@ import { doctorInsertValidator, doctorPutValidator, doctorPatchValidator,docterG
 export default class DoctorsController {
     doc =new doctorDb()
     async getDoctor({request,response}:HttpContext){
+        console.log('Debug: Request reached getDoctor controller')
+        console.log('Debug: Authenticated user from middleware:', request.user)
         try
             {
             const { id } =await  docterGetIdValidator.validate(request.qs())
             const res = await this.doc.get(id);
             response.ok({success:true,message:'Fetched successfully',data:res})}
-        catch(err){
+        catch(err)
+        {
             throw err
         }
     }

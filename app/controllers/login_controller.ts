@@ -24,11 +24,6 @@ export default class LoginController {
       throw new Error('JWT secret is missing or invalid in authConfig')
     }
 
-    const jwtExpiresIn: string | number = typeof jwtExpiration === 'string' || typeof jwtExpiration === 'number'
-      ? jwtExpiration
-      : '1h'
-
-    
     const token = jwt.sign(payload, jwtSecret as string);
    
 

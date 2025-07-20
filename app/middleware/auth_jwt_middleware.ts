@@ -1,8 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import jwt from 'jsonwebtoken'
-// import authConfig from '#config/auth'
 
-// Extend the Request interface to include 'user'
 declare module '@adonisjs/core/http' {
   interface Request {
     user?: any
@@ -11,22 +9,24 @@ declare module '@adonisjs/core/http' {
 
 export default class AuthJwt {
   async handle({ request, response }: HttpContext, next: () => Promise<void>) {
+    const authHeader = request.header('authorization') 
+    console.log('Debug: Received Authorization header:', authHeader)
     const token = request.header('authorization')?.replace('Bearer ', '')
     if (!token) {
       return response.unauthorized({ error: 'No token provided' })
     }
-
     try {
-      if (!process.env.jwtSecret) {
+      if (!process.env.JWT_SECRET) {
         return response.unauthorized({ error: 'JWT secret not configured' })
       }
-      const decoded = jwt.verify(token, process.env.jwtSecret as string)
-      
+      const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
+      console.log('Debug: Token verified successfully. Decoded payload:', decoded)
       request['user'] = decoded
     } catch (error) {
+      console.log('Debug: Token verification failed:', error.message)
       return response.unauthorized({ error: 'Invalid or expired token' })
     }
 
-    await next()
+    return next()
   }
 }
