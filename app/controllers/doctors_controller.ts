@@ -4,10 +4,10 @@ import { doctorInsertValidator, doctorPutValidator, doctorPatchValidator,docterG
 
 
 export default class DoctorsController {
+
     doc =new doctorDb()
     async getDoctor({request,response}:HttpContext){
-        console.log('Debug: Request reached getDoctor controller')
-        console.log('Debug: Authenticated user from middleware:', request.user)
+       
         try
             {
             const { id } =await  docterGetIdValidator.validate(request.qs())
@@ -38,7 +38,7 @@ export default class DoctorsController {
             //         password: doctorObject[i].password
             //     })
             // }
-            console.log(request.header)
+            
             const{name,expertise,password} =  await doctorInsertValidator.validate(request.body())
             await this.doc.addDoctor(name,expertise,password)
             response.status(201).send({success:true,message:'Created Successfully'})

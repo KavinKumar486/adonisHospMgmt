@@ -24,7 +24,7 @@ router.group(()=>{
   router.get('/getPatientCount',[doctorController,'getPatientCount']),
   router.get('/getPatientDetailsWithDoctor',[doctorController,'getPatientDetailsWithDoctor'])
   }
-).prefix('/doctor').use(middleware.jwt())
+).prefix('/doctor').use(jwt())
 router.group(()=>{
   router.get('/getPatient',[patientController,'getPatient'])
   router.post('/add',[patientController,'add'])
@@ -42,14 +42,13 @@ router.group(()=>{
   ),
   router.delete('/delete/:id',[patientController,'delete'])
   }
-).prefix('/patient')
-
+).prefix('/patient').use(jwt())
 router.group(()=>{
   router.get('getMedicine',[medicineController,'getMedicine']),
   router.post('add',[medicineController,'add']),
   router.put('update',[medicineController,'update']),
   router.patch('patch',[medicineController,'patchMedicine']),
   router.delete('deleteMedicine',[medicineController,'delete'])
-  }
+}
 ).prefix('/medicine')
 router.post('login',[loginController,'verify'])
