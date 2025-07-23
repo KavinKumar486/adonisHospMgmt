@@ -48,7 +48,7 @@ class docRepo{
     }
     async addManyDoctors(doctorArray: Array<{ name: string; expertise: string; password: string }>) {
     try {
-        console.log("before hasing : ", doctorArray[-1].password)
+        
         for (const doc of doctorArray) {
             doc.password = await hash.make(doc.password)
         }
@@ -64,7 +64,7 @@ class docRepo{
             return "Deletion Success"
         }
         catch(err){throw err}
-    }
+}
     async patchDoctor(payload:object,id:number){
         try{
             const doctor = await Doctor.findOrFail(id)

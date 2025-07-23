@@ -106,5 +106,5 @@ async delete({ params, response }: HttpContext) {
         const payload = await this.doc.getDoctorWithPatients(id);
         response.status(200).send({success:true,message:'fetch success',data:payload});
     }
-    updateMany(){}
+    updateMany(){} 
 }

@@ -21,7 +21,6 @@ export default class LoginController {
     if (!jwtSecret || typeof jwtSecret !== 'string') {
       throw new Error('JWT secret is missing or invalid in authConfig')
     }
-
     const token = jwt.sign(payload, jwtSecret as string);
 
     return response.ok({
